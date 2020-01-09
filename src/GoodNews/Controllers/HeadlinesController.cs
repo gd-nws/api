@@ -29,7 +29,7 @@ namespace GoodNews.Controllers
         [HttpGet("sentiment/{sentiment}")]
         [Produces("application/json")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<HeadlinesResponse>> FetchDailyHeadlines(HeadlineSentiment sentiment,
+        public async Task<ActionResult<HeadlinesResponse>> GetHeadlinesByDay(HeadlineSentiment sentiment,
             [FromQuery(Name = "limit")] int limit, [FromQuery(Name = "page")] int page,
             [FromQuery(Name = "date")] DateTime dateTime)
         {
@@ -52,6 +52,22 @@ namespace GoodNews.Controllers
                 Headlines = headlines,
                 Count = count
             };
+        }
+        
+        /// <summary>
+        /// Get a news headline
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet( "{id}", Name = "GetHeadline")]
+        [Produces("application/json")]
+        
+        public async Task<ActionResult<NewsHeadline>> GetHeadline(int id)
+        {
+            var headline = await _headlineRepository.GetHeadline(id);
+            if (headline == null) return NotFound();
+
+            return headline;
         }
     }
 }

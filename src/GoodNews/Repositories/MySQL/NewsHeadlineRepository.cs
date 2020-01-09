@@ -12,9 +12,14 @@ namespace GoodNews.Repositories.MySQL
         {
         }
 
-        /**
-         * Fetch headlines sorted by sentiment.
-         */
+        /// <summary>
+        /// Fetch headlines sorted by sentiment.
+        /// </summary>
+        /// <param name="sentiment"></param>
+        /// <param name="dateOffset"></param>
+        /// <param name="limit"></param>
+        /// <param name="offset"></param>
+        /// <returns></returns>
         public async Task<IList<NewsHeadline>> FetchHeadlinesBySentiment(HeadlineSentiment sentiment, int dateOffset,
             int limit = 10, int offset = 0)
         {
@@ -33,9 +38,11 @@ namespace GoodNews.Repositories.MySQL
             ").ToListAsync();
         }
 
-        /**
-         * Fetch a single headline.
-         */
+        /// <summary>
+        /// Fetch a single headline.
+        /// </summary>
+        /// <param name="headlineId"></param>
+        /// <returns></returns>
         public async Task<NewsHeadline> GetHeadline(int headlineId)
         {
             var result = await Db.NewsHeadlines.FromSqlRaw($@"
@@ -46,7 +53,13 @@ namespace GoodNews.Repositories.MySQL
 
             return result.Count > 0 ? result.First() : null;
         }
-
+        
+        /// <summary>
+        /// Fetch headlines sorted by sentiment count.
+        /// </summary>
+        /// <param name="sentiment"></param>
+        /// <param name="dateOffset"></param>
+        /// <returns></returns>
         public async Task<int> FetchHeadlinesBySentimentCount(HeadlineSentiment sentiment, int dateOffset)
         {
             var op = sentiment == HeadlineSentiment.POSITIVE ? ">" : "=";
