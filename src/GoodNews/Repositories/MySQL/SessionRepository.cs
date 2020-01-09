@@ -26,11 +26,11 @@ namespace GoodNews.Repositories.MySQL
             return result.Count > 0 ? result.First() : null;
         }
 
-        public string CreateSession()
+        public async Task<string> CreateSession()
         {
             var guid = Guid.NewGuid().ToString();
 
-            Db.Database.ExecuteSqlRaw($@"
+            await Db.Database.ExecuteSqlRawAsync($@"
                 INSERT INTO uuids (uuid)
                 VALUES ('{guid}')
             ");

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using GoodNews.Models.Responses;
 using GoodNews.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -19,9 +20,9 @@ namespace GoodNews.Controllers
          * Get a new session.
          */
         [HttpGet]
-        public ActionResult<NewSessionResponse> CreateSession()
+        public async Task<ActionResult<NewSessionResponse>> CreateSession()
         {
-            var uuid = _sessionRepository.CreateSession();
+            var uuid = await _sessionRepository.CreateSession();
             return new NewSessionResponse
             {
                 SessionToken = uuid
