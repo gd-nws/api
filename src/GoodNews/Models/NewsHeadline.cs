@@ -46,5 +46,11 @@ namespace GoodNews.Models
         
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
+        
+        [Column("positive_votes")]
+        public int PositiveVotes { get; set; }
+        
+        [Column("negative_votes")]
+        public int NegativeVotes { get; set; }
     }
 }
