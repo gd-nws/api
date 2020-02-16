@@ -4,22 +4,19 @@ using System.Threading.Tasks;
 using GoodNews.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace GoodNews.Repositories.MySQL
+namespace GoodNews.Repositories.Postgres
 {
-    public class SessionRepository : MySqlRepository, ISessionRepository
+    public class SessionRepository : PostgresRepository, ISessionRepository
     {
         public SessionRepository(GoodNewsDBContext db) : base(db)
         {
         }
-        
-        /**
-         * Fetch a session.
-         */
+
         public async Task<Session> GetSession(string id)
         {
             var result = await Db.Sessions.FromSqlRaw($@"
                 SELECT *
-                FROM uuids u
+                FROM good_news.uuids u
                 WHERE u.uuid = '{id}'
             ").ToListAsync();
 

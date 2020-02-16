@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using GoodNews.Models.Settings;
 using GoodNews.Repositories;
-using GoodNews.Repositories.MySQL;
+using GoodNews.Repositories.Postgres;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 namespace GoodNews
 {
@@ -47,13 +48,17 @@ namespace GoodNews
             services.AddSingleton<IMySqlSettings>(sp =>
                 sp.GetRequiredService<IOptions<MySqlSettings>>().Value);
 
-            services.AddDbContext<GoodNewsDBContext>(x =>
-                    x.UseMySql(Configuration
-                        .GetSection("Database")
-                        .GetSection(nameof(MySqlSettings))
-                        .Get<MySqlSettings>().ConnectionString)
-                , ServiceLifetime.Transient
-            );
+            services.Configure<PostgresSettings>(
+                Configuration.GetSection("Database").GetSection(nameof(PostgresSettings)));
+            services.AddSingleton<IPostgresSettings>(sp =>
+                sp.GetRequiredService<IOptions<PostgresSettings>>().Value);
+
+            var conString = Configuration
+                .GetSection("Database")
+                .GetSection(nameof(PostgresSettings))
+                .Get<PostgresSettings>().ConnectionString;
+            services.AddDbContext<GoodNewsDBContext>(options =>
+                options.UseNpgsql(conString), ServiceLifetime.Transient);
 
             // Repositories
             services.AddSingleton<INewsHeadlineRepository, NewsHeadlineRepository>();
@@ -64,10 +69,9 @@ namespace GoodNews
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+            
+            app.UseSerilogRequestLogging();
 
             var db = app.ApplicationServices.GetRequiredService<GoodNewsDBContext>();
             db.Database.EnsureCreated();

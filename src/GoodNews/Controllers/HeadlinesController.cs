@@ -19,14 +19,14 @@ namespace GoodNews.Controllers
         }
 
         /// <summary>
-        /// Fetch daily headlines ordered by their sentiment.
+        ///     Fetch daily headlines ordered by their sentiment.
         /// </summary>
         /// <param name="sentiment"></param>
         /// <param name="limit"></param>
         /// <param name="page"></param>
         /// <param name="dateTime"></param>
         /// <returns></returns>
-        [HttpGet()]
+        [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(200)]
         public async Task<ActionResult<HeadlinesResponse>> GetHeadlinesByDay(
@@ -56,7 +56,7 @@ namespace GoodNews.Controllers
         }
 
         /// <summary>
-        /// Get a news headline
+        ///     Get a news headline
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -74,7 +74,7 @@ namespace GoodNews.Controllers
         }
 
         /// <summary>
-        /// Search headlines for a term.
+        ///     Search headlines for a term.
         /// </summary>
         /// <param name="sentiment"></param>
         /// <param name="limit"></param>

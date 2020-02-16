@@ -1,11 +1,11 @@
 namespace GoodNews.Models.Settings
 {
-    public interface IMySqlSettings
+    public interface IPostgresSettings
     {
         string ConnectionString { get; set; }
     }
 
-    public class MySqlSettings : IMySqlSettings
+    public class PostgresSettings : IPostgresSettings
     {
         public string ConnectionString { get; set; }
     }

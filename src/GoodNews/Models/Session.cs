@@ -7,14 +7,10 @@ namespace GoodNews.Models
     [Table("uuids")]
     public class Session
     {
-        [Key]
-        [Column("uuid")]
-        public string Uuid { get; set; }
-        
-        [Column("created_at")]
-        public DateTime CreatedAt { get; set; }
-        
-        [Column("last_session")]
-        public DateTime LastSession { get; set; }
+        [Key] [Column("uuid")] public string Uuid { get; set; }
+
+        [Column("created_at")] public DateTime CreatedAt { get; set; }
+
+        [Column("last_session")] public DateTime? LastSession { get; set; }
     }
 }
