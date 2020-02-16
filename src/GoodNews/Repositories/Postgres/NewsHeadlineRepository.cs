@@ -8,14 +8,17 @@ namespace GoodNews.Repositories.Postgres
 {
     public class NewsHeadlineRepository : PostgresRepository, INewsHeadlineRepository
     {
-        public NewsHeadlineRepository(GoodNewsDBContext db) : base(db) { }
+        public NewsHeadlineRepository(GoodNewsDBContext db) : base(db)
+        {
+        }
 
-        public async Task<IList<NewsHeadline>> FetchHeadlinesBySentiment(HeadlineSentiment sentiment, int dateOffset, int limit = 10, int offset = 10)
+        public async Task<IList<NewsHeadline>> FetchHeadlinesBySentiment(HeadlineSentiment sentiment, int dateOffset,
+            int limit = 10, int offset = 10)
         {
             var op = sentiment == HeadlineSentiment.POSITIVE ? ">" : "=";
             var sort = sentiment == HeadlineSentiment.POSITIVE ? "DESC" : "ASC";
-
-            return await Db.NewsHeadlines.FromSqlRaw($@"
+            
+            var headlines = await Db.NewsHeadlines.FromSqlRaw($@"
                 SELECT h.id,
                        h.headline,
                        h.predicted_class,
@@ -44,6 +47,8 @@ namespace GoodNews.Repositories.Postgres
                 ORDER BY h.semantic_value {sort}
                 LIMIT {limit} OFFSET {offset}
             ").AsNoTracking().ToListAsync();
+
+            return headlines;
         }
 
         public async Task<NewsHeadline> GetHeadline(int headlineId)
@@ -90,7 +95,8 @@ namespace GoodNews.Repositories.Postgres
             ").AsNoTracking().CountAsync();
         }
 
-        public async Task<IList<NewsHeadline>> SearchHeadlines(HeadlineSentiment sentiment, string term, int limit = 10, int offset = 0)
+        public async Task<IList<NewsHeadline>> SearchHeadlines(HeadlineSentiment sentiment, string term, int limit = 10,
+            int offset = 0)
         {
             var sort = sentiment == HeadlineSentiment.POSITIVE ? "DESC" : "ASC";
             return await Db.NewsHeadlines.FromSqlRaw($@"

@@ -46,7 +46,7 @@ namespace GoodNews
                 Configuration.GetSection("Database").GetSection(nameof(MySqlSettings)));
             services.AddSingleton<IMySqlSettings>(sp =>
                 sp.GetRequiredService<IOptions<MySqlSettings>>().Value);
-            
+
             services.Configure<PostgresSettings>(
                 Configuration.GetSection("Database").GetSection(nameof(PostgresSettings)));
             services.AddSingleton<IPostgresSettings>(sp =>
@@ -57,7 +57,7 @@ namespace GoodNews
                 .GetSection(nameof(PostgresSettings))
                 .Get<PostgresSettings>().ConnectionString;
             services.AddDbContext<GoodNewsDBContext>(options =>
-                options.UseNpgsql(conString));
+                options.UseNpgsql(conString), ServiceLifetime.Transient);
 
             // Repositories
             services.AddSingleton<INewsHeadlineRepository, NewsHeadlineRepository>();
@@ -68,10 +68,7 @@ namespace GoodNews
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             var db = app.ApplicationServices.GetRequiredService<GoodNewsDBContext>();
             db.Database.EnsureCreated();

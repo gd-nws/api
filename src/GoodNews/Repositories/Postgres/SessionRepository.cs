@@ -6,9 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GoodNews.Repositories.Postgres
 {
-    public class SessionRepository: PostgresRepository, ISessionRepository
+    public class SessionRepository : PostgresRepository, ISessionRepository
     {
-        public SessionRepository(GoodNewsDBContext db) : base(db) { }
+        public SessionRepository(GoodNewsDBContext db) : base(db)
+        {
+        }
 
         public async Task<Session> GetSession(string id)
         {

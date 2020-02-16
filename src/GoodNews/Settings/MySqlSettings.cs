@@ -4,7 +4,7 @@ namespace GoodNews.Models.Settings
     {
         string ConnectionString { get; set; }
     }
-    
+
     public class MySqlSettings : IMySqlSettings
     {
         public string ConnectionString { get; set; }

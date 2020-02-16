@@ -4,7 +4,7 @@ namespace GoodNews.Models.Settings
     {
         string ConnectionString { get; set; }
     }
-    
+
     public class PostgresSettings : IPostgresSettings
     {
         public string ConnectionString { get; set; }

@@ -15,7 +15,7 @@ namespace GoodNews.Controllers
         {
             _sessionRepository = sessionRepository;
         }
-        
+
         /**
          * Get a new session.
          */

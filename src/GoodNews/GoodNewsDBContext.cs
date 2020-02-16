@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GoodNews
 {
-    public class GoodNewsDBContext: DbContext
+    public class GoodNewsDBContext : DbContext
     {
-        public GoodNewsDBContext(DbContextOptions opt): base(opt) {}
-        
+        public GoodNewsDBContext(DbContextOptions opt) : base(opt)
+        {
+        }
+
         public DbSet<Annotation> Annotations { get; set; }
         public DbSet<NewsHeadline> NewsHeadlines { get; set; }
         public DbSet<Session> Sessions { get; set; }
@@ -14,10 +16,7 @@ namespace GoodNews
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<SessionAnnotation>(eb =>
-                {
-                    eb.HasNoKey();
-                });
+            modelBuilder.Entity<SessionAnnotation>(eb => { eb.HasNoKey(); });
         }
     }
 }

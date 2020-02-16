@@ -6,18 +6,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GoodNews.Repositories.Postgres
 {
-    public class AnnotationRepository: PostgresRepository, IAnnotationRepository
+    public class AnnotationRepository : PostgresRepository, IAnnotationRepository
     {
-        public AnnotationRepository(GoodNewsDBContext db) : base(db) { }
+        public AnnotationRepository(GoodNewsDBContext db) : base(db)
+        {
+        }
 
         public async Task<List<SessionAnnotation>> GetSessionAnnotations(string session)
         {
-            return await Db.SessionAnnotations.FromSqlRaw($@"
+            var result = await Db.SessionAnnotations.FromSqlRaw($@"
                 SELECT *
                 FROM good_news.session_annotations sa
                 WHERE sa.session_id = '{session}'
                 ORDER BY sa.created_at DESC
             ").ToListAsync();
+
+            return result;
         }
 
         public async Task CreateSessionAnnotation(NewsHeadline headline, Session session, HeadlineSentiment sentiment)
@@ -53,7 +57,7 @@ namespace GoodNews.Repositories.Postgres
                         (session_id, headline_id, vote)
                     VALUES ('{session.Uuid}', {headline.Id}, {vote})
                 ");
-                
+
             await trx.CommitAsync();
         }
     }

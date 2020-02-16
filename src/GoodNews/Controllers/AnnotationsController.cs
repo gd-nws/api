@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using GoodNews.Models;
 using GoodNews.Models.Requests;
 using GoodNews.Models.Responses;
 using GoodNews.Repositories;
@@ -24,7 +23,7 @@ namespace GoodNews.Controllers
         }
 
         /// <summary>
-        /// Get all annotations for a session.
+        ///     Get all annotations for a session.
         /// </summary>
         /// <param name="sessionId"></param>
         /// <returns></returns>
@@ -43,8 +42,8 @@ namespace GoodNews.Controllers
         [HttpPost("{headlineId}")]
         public async Task<IActionResult> StoreSessionAnnotation(int headlineId, NewSessionAnnotationRequest annotation)
         {
-            NewsHeadline headline = await _headlineRepository.GetHeadline(headlineId);
-            Session session = await _sessionRepository.GetSession(annotation.SessionToken);
+            var headline = await _headlineRepository.GetHeadline(headlineId);
+            var session = await _sessionRepository.GetSession(annotation.SessionToken);
 
             if (headline == null) return NotFound("Headline not found");
             if (session == null) return NotFound("Session not found");
