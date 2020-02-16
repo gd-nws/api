@@ -72,7 +72,7 @@ namespace GoodNews.Controllers
                 Headline = headline
             };
         }
-        
+
         /// <summary>
         /// Search headlines for a term.
         /// </summary>
@@ -83,8 +83,9 @@ namespace GoodNews.Controllers
         /// <returns></returns>
         [HttpGet("search", Name = "SearchHeadlines")]
         [Produces("application/json")]
-        public async Task<ActionResult<HeadlinesResponse>> SearchHeadlines([FromQuery(Name = "term")] string term, [FromQuery(Name = "sentiment")] HeadlineSentiment sentiment = HeadlineSentiment.POSITIVE,
-             [FromQuery(Name = "page")] int page = 1, [FromQuery(Name = "limit")] int limit = 10)
+        public async Task<ActionResult<HeadlinesResponse>> SearchHeadlines([FromQuery(Name = "term")] string term,
+            [FromQuery(Name = "sentiment")] HeadlineSentiment sentiment = HeadlineSentiment.POSITIVE,
+            [FromQuery(Name = "page")] int page = 1, [FromQuery(Name = "limit")] int limit = 10)
         {
             if (page <= 0) return BadRequest("Page must be greater than 0");
             var offset = (page - 1) * limit;
