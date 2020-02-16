@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 namespace GoodNews
 {
@@ -69,6 +70,8 @@ namespace GoodNews
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+            
+            app.UseSerilogRequestLogging();
 
             var db = app.ApplicationServices.GetRequiredService<GoodNewsDBContext>();
             db.Database.EnsureCreated();
