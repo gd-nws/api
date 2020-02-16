@@ -54,7 +54,7 @@ namespace GoodNews.Repositories.MySQL
                   AND DATE(h.published_at) = CURDATE() - INTERVAL {dateOffset} DAY
                 ORDER BY h.semantic_value {sort}
                 LIMIT {limit} OFFSET {offset}
-            ").ToListAsync();
+            ").AsNoTracking().ToListAsync();
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace GoodNews.Repositories.MySQL
                     GROUP BY a.headline_id
                 ) a on h.id = a.headline_id
                 WHERE h.id = {headlineId}
-            ").ToListAsync();
+            ").AsNoTracking().ToListAsync();
 
             return result.Count > 0 ? result.First() : null;
         }
@@ -109,7 +109,7 @@ namespace GoodNews.Repositories.MySQL
 			    WHERE 
 			      h.predicted_class {op} 0
                 AND DATE(h.published_at) = CURDATE() - INTERVAL {dateOffset} DAY
-            ").CountAsync();
+            ").AsNoTracking().CountAsync();
         }
 
         /// <summary>
