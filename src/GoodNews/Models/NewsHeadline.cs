@@ -9,10 +9,10 @@ namespace GoodNews.Models
     {
         [Key]
         [Column("id")]
-        public uint Id { get; set; }
+        public long Id { get; set; }
         
         [Column("predicted_class")]
-        public int? PredictedClass { get; set; }
+        public long? PredictedClass { get; set; }
         
         [Column("headline")]
         public string Headline { get; set; }
@@ -24,19 +24,19 @@ namespace GoodNews.Models
         public string Origin { get; set; }
         
         [Column("semantic_value")]
-        public float SemanticValue { get; set; }
+        public double SemanticValue { get; set; }
         
         [Column("hashcode")]
         public string Hashcode { get; set; }
         
         [Column("pos")]
-        public float Pos { get; set; }
+        public double Pos { get; set; }
         
         [Column("neg")]
-        public float Neg { get; set; }
+        public double Neg { get; set; }
         
         [Column("neu")]
-        public float Nue { get; set; }
+        public double Nue { get; set; }
         
         [Column("published_at")]
         public DateTime PublishedAt { get; set; }

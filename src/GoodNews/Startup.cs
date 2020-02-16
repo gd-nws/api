@@ -1,8 +1,7 @@
-using System;
 using System.Text.Json.Serialization;
 using GoodNews.Models.Settings;
 using GoodNews.Repositories;
-using GoodNews.Repositories.MySQL;
+using GoodNews.Repositories.Postgres;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using AnnotationRepository = GoodNews.Repositories.Postgres.AnnotationRepository;
 
 namespace GoodNews
 {
@@ -54,14 +52,6 @@ namespace GoodNews
             services.AddSingleton<IPostgresSettings>(sp =>
                 sp.GetRequiredService<IOptions<PostgresSettings>>().Value);
 
-            /*services.AddDbContext<GoodNewsDBContext>(x =>
-                    x.UseMySql(Configuration
-                        .GetSection("Database")
-                        .GetSection(nameof(MySqlSettings))
-                        .Get<MySqlSettings>().ConnectionString)
-                , ServiceLifetime.Transient
-            );*/
-            
             var conString = Configuration
                 .GetSection("Database")
                 .GetSection(nameof(PostgresSettings))
