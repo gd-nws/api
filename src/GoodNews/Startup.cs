@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json.Serialization;
 using GoodNews.Models.Settings;
 using GoodNews.Repositories;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using AnnotationRepository = GoodNews.Repositories.Postgres.AnnotationRepository;
 
 namespace GoodNews
 {
@@ -46,14 +48,26 @@ namespace GoodNews
                 Configuration.GetSection("Database").GetSection(nameof(MySqlSettings)));
             services.AddSingleton<IMySqlSettings>(sp =>
                 sp.GetRequiredService<IOptions<MySqlSettings>>().Value);
+            
+            services.Configure<PostgresSettings>(
+                Configuration.GetSection("Database").GetSection(nameof(PostgresSettings)));
+            services.AddSingleton<IPostgresSettings>(sp =>
+                sp.GetRequiredService<IOptions<PostgresSettings>>().Value);
 
-            services.AddDbContext<GoodNewsDBContext>(x =>
+            /*services.AddDbContext<GoodNewsDBContext>(x =>
                     x.UseMySql(Configuration
                         .GetSection("Database")
                         .GetSection(nameof(MySqlSettings))
                         .Get<MySqlSettings>().ConnectionString)
                 , ServiceLifetime.Transient
-            );
+            );*/
+            
+            var conString = Configuration
+                .GetSection("Database")
+                .GetSection(nameof(PostgresSettings))
+                .Get<PostgresSettings>().ConnectionString;
+            services.AddDbContext<GoodNewsDBContext>(options =>
+                options.UseNpgsql(conString));
 
             // Repositories
             services.AddSingleton<INewsHeadlineRepository, NewsHeadlineRepository>();
