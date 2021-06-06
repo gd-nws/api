@@ -43,11 +43,6 @@ namespace GoodNews
                         .AllowAnyHeader());
             });
 
-            services.Configure<MySqlSettings>(
-                Configuration.GetSection("Database").GetSection(nameof(MySqlSettings)));
-            services.AddSingleton<IMySqlSettings>(sp =>
-                sp.GetRequiredService<IOptions<MySqlSettings>>().Value);
-
             services.Configure<PostgresSettings>(
                 Configuration.GetSection("Database").GetSection(nameof(PostgresSettings)));
             services.AddSingleton<IPostgresSettings>(sp =>
@@ -58,7 +53,7 @@ namespace GoodNews
                 .GetSection(nameof(PostgresSettings))
                 .Get<PostgresSettings>().ConnectionString;
             services.AddDbContext<GoodNewsDBContext>(options =>
-                options.UseNpgsql(conString), ServiceLifetime.Transient);
+                options.UseNpgsql(conString));
 
             // Repositories
             services.AddSingleton<INewsHeadlineRepository, NewsHeadlineRepository>();

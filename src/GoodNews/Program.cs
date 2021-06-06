@@ -12,9 +12,9 @@ namespace GoodNews
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-                .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Information)
                 .Enrich.FromLogContext()
-                .WriteTo.File("./logs/app.log")
+                .WriteTo.Console()
                 .CreateLogger();
         
             try

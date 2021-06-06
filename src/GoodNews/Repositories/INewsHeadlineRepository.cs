@@ -6,7 +6,7 @@ namespace GoodNews.Repositories
 {
     public interface INewsHeadlineRepository
     {
-        Task<IList<NewsHeadline>> FetchHeadlinesBySentiment(HeadlineSentiment sentiment, int dateOffset, int limit = 10,
+        Task<IList<AnnotatedHeadline>> FetchHeadlinesBySentiment(HeadlineSentiment sentiment, int dateOffset, int limit = 10,
             int offset = 10);
 
         Task<NewsHeadline> GetHeadline(int headlineId);
@@ -16,6 +16,6 @@ namespace GoodNews.Repositories
         Task<IList<NewsHeadline>> SearchHeadlines(HeadlineSentiment sentiment, string term, int limit = 10,
             int offset = 0);
 
-        Task<int> SearchHeadlinesCount(string term);
+        Task<int> SearchHeadlinesCount(HeadlineSentiment sentiment, string term);
     }
 }

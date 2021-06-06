@@ -4,18 +4,20 @@ services:
     build: .
     image: good_news
     ports:
-      - 80:80
+      - 5005:80
     environment:
-      Database__MySqlSettings__ConnectionString: ${DB_CONNECTION_STRING}
-  mysql:
-    image: "mysql:5.7"
-    ports:
-      - 3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: "secret"
-      MYSQL_USER: "root"
-    volumes:
-      - my-datavolume:/var/lib/mysql
+      Database__PostgresSettings__ConnectionString: ${Database__PostgresSettings__ConnectionString}
+  
+  postgres:
+      image: postgres:alpine
+      ports:
+        - 5432:5432
+      environment: 
+        POSTGRES_PASSWORD: "secret"
+        POSTGRES_USER: "good_news"
+        POSTGRES_DB: "good_news"
+      volumes:
+        - postgres:/var/lib/postgresql
+  
 volumes:
-  my-datavolume:
-    driver: local
+  postgres:

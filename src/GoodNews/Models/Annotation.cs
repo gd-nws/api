@@ -13,7 +13,7 @@ namespace GoodNews.Models
 
         [Column("uuid")] public string Uuid { get; set; }
 
-        [ForeignKey("annotations_headlines_id_fk")]
+        [ForeignKey("headline_id")]
         public NewsHeadline NewsHeadline { get; set; }
     }
 }
