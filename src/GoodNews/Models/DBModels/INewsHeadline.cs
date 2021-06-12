@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using Models.DBModels.Mongo;
+using GoodNews.Models.DBModels.Mongo;
 
 namespace GoodNews.Models.DBModels
 {
   public interface INewsHeadline
   {
-    long Id { get; set; }
-    string HeadlineId { get; set; }
+    string Id { get; set; }
+    long LegacyId { get; set; }
     string Headline { get; set; }
     long? PredictedClass { get; set; }
 

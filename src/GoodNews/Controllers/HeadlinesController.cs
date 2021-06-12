@@ -4,11 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using GoodNews.Models;
 using GoodNews.Models.DBModels;
+using GoodNews.Models.DBModels.Mongo;
 using GoodNews.Models.Requests;
 using GoodNews.Models.Responses;
 using GoodNews.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Models.DBModels.Mongo;
 
 namespace GoodNews.Controllers
 {
@@ -75,7 +75,8 @@ namespace GoodNews.Controllers
     /// <returns></returns>
     [HttpGet("{id}", Name = "GetHeadline")]
     [Produces("application/json")]
-    public async Task<ActionResult<HeadlineResponse>> GetHeadline(int id, [FromHeader(Name = "annotation-session")] string sessionToken)
+    public async Task<ActionResult<HeadlineResponse>> GetHeadline(
+      string id, [FromHeader(Name = "annotation-session")] string sessionToken)
     {
       var headline = await _headlineRepository.GetHeadline(id);
       if (headline == null) return NotFound();
@@ -132,7 +133,7 @@ namespace GoodNews.Controllers
     /// <returns></returns>
     [HttpPost("{headlineId}/annotations")]
     [ProducesResponseType(204)]
-    public async Task<IActionResult> AnnotateHeadline(int headlineId, NewSessionAnnotationRequest annotation)
+    public async Task<IActionResult> AnnotateHeadline(string headlineId, NewSessionAnnotationRequest annotation)
     {
       INewsHeadline headline = await _headlineRepository.GetHeadline(headlineId);
       var session = await _sessionRepository.GetById(annotation.SessionToken);

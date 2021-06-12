@@ -1,7 +1,7 @@
 using System;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Models.DBModels.Mongo
+namespace GoodNews.Models.DBModels.Mongo
 {
   public class HeadlineAnnotation : IHeadlineAnnotation
   {

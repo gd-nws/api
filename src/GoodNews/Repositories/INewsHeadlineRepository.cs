@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GoodNews.Models;
 using GoodNews.Models.DBModels;
-using Models.DBModels;
 
 namespace GoodNews.Repositories
 {
@@ -11,7 +10,7 @@ namespace GoodNews.Repositories
     Task<IList<INewsHeadline>> FetchHeadlinesBySentiment(HeadlineSentiment sentiment, int dateOffset, int limit = 10,
         int offset = 10);
 
-    Task<INewsHeadline> GetHeadline(int headlineId);
+    Task<INewsHeadline> GetHeadline(string headlineId);
 
     Task<int> FetchHeadlinesBySentimentCount(HeadlineSentiment sentiment, int dateOffset);
 

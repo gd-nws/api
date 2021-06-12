@@ -1,6 +1,6 @@
 using System;
 
-namespace Models.DBModels
+namespace GoodNews.Models.DBModels
 {
   public interface IHeadlineAnnotation
   {

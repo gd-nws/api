@@ -12,6 +12,7 @@ namespace GoodNews.Models.DBModels.Mongo
     public string Id { get; set; }
 
     [BsonElement("createdAt")]
+    [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
     public DateTime CreatedAt { get; set; }
   }
 }

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using GoodNews.Models;
 using GoodNews.Models.DBModels;
+using GoodNews.Models.DBModels.Mongo;
 using GoodNews.Models.Settings;
-using Models.DBModels.Mongo;
 using MongoDB.Driver;
 
 namespace GoodNews.Repositories.Mongo
@@ -22,7 +22,8 @@ namespace GoodNews.Repositories.Mongo
       _headlines = database.GetCollection<MongoNewsHeadline>(settings.HeadlinesCollectionName);
     }
 
-    public async Task<IList<INewsHeadline>> FetchHeadlinesBySentiment(HeadlineSentiment sentiment, int dateOffset, int limit = 10, int offset = 0)
+    public async Task<IList<INewsHeadline>> FetchHeadlinesBySentiment(
+      HeadlineSentiment sentiment, int dateOffset, int limit = 10, int offset = 0)
     {
       var isPositive = sentiment == HeadlineSentiment.POSITIVE;
       var predictedClass = isPositive ? 1 : 0;
@@ -59,13 +60,14 @@ namespace GoodNews.Repositories.Mongo
       return (int)count;
     }
 
-    public async Task<INewsHeadline> GetHeadline(int headlineId)
+    public async Task<INewsHeadline> GetHeadline(string id)
     {
-      var headline = await _headlines.Find(h => h.Id == headlineId).SingleOrDefaultAsync();
+      var headline = await _headlines.Find(h => h.Id.Equals(id)).SingleOrDefaultAsync();
       return headline;
     }
 
-    public async Task<IList<INewsHeadline>> SearchHeadlines(HeadlineSentiment sentiment, string term, int limit = 10, int offset = 0)
+    public async Task<IList<INewsHeadline>> SearchHeadlines(
+      HeadlineSentiment sentiment, string term, int limit = 10, int offset = 0)
     {
       var isPositive = sentiment == HeadlineSentiment.POSITIVE;
       var predictedClass = isPositive ? 1 : 0;

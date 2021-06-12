@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using GoodNews.Models.DBModels;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Models.DBModels.Mongo
+namespace GoodNews.Models.DBModels.Mongo
 {
 
-  public class MongoNewsHeadline : INewsHeadline
+  public class MongoNewsHeadline : BaseMongoEntity, INewsHeadline
   {
     public MongoNewsHeadline()
     {
@@ -16,12 +15,7 @@ namespace Models.DBModels.Mongo
 
     // Old numeric Id
     [BsonElement("legacyId")]
-    public long Id { get; set; }
-
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    [BsonElement("_id")]
-    public string HeadlineId { get; set; }
+    public long LegacyId { get; set; }
 
     [BsonElement("headline")]
     public string Headline { get; set; }
@@ -56,9 +50,6 @@ namespace Models.DBModels.Mongo
 
     [BsonElement("displayImage")]
     public string DisplayImage { get; set; }
-
-    [BsonElement("createdAt")]
-    public DateTime CreatedAt { get; set; }
 
     [BsonElement("votes")]
     public HeadlineVotes Votes { get; set; }
