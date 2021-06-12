@@ -1,4 +1,3 @@
-using GoodNews.Models.DBModels;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace GoodNews.Models.DBModels.Mongo

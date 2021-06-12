@@ -23,6 +23,8 @@ namespace GoodNews.Controllers
     /// </summary>
     /// <returns></returns>
     [HttpGet]
+    [Produces("application/json")]
+    [ProducesResponseType(200)]
     public async Task<ActionResult<NewSessionResponse>> CreateSession()
     {
       var session = new Session() { CreatedAt = DateTime.Now };

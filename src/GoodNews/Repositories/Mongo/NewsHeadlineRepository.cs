@@ -6,20 +6,30 @@ using GoodNews.Models;
 using GoodNews.Models.DBModels;
 using GoodNews.Models.DBModels.Mongo;
 using GoodNews.Models.Settings;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace GoodNews.Repositories.Mongo
 {
-  class NewsHeadlineRepository : INewsHeadlineRepository
+  class NewsHeadlineRepository : BaseRepository<INewsHeadline>, INewsHeadlineRepository
   {
     private readonly IMongoCollection<MongoNewsHeadline> _headlines;
 
-    public NewsHeadlineRepository(IMongoSettings settings)
+    public NewsHeadlineRepository(IMongoSettings settings) : base(settings)
     {
-      var client = new MongoClient(settings.ConnectionString);
-      var database = client.GetDatabase(settings.DatabaseName);
 
-      _headlines = database.GetCollection<MongoNewsHeadline>(settings.HeadlinesCollectionName);
+      _headlines = base._db.GetCollection<MongoNewsHeadline>(settings.HeadlinesCollectionName);
+
+      if (!BsonClassMap.IsClassMapRegistered(typeof(MongoNewsHeadline)))
+        BsonClassMap.RegisterClassMap<MongoNewsHeadline>();
+
+      if (!BsonClassMap.IsClassMapRegistered(typeof(HeadlineVotes)))
+        BsonClassMap.RegisterClassMap<HeadlineVotes>();
+    }
+
+    public override Task<INewsHeadline> Create(INewsHeadline t)
+    {
+      throw new NotImplementedException();
     }
 
     public async Task<IList<INewsHeadline>> FetchHeadlinesBySentiment(
@@ -60,7 +70,7 @@ namespace GoodNews.Repositories.Mongo
       return (int)count;
     }
 
-    public async Task<INewsHeadline> GetHeadline(string id)
+    public async override Task<INewsHeadline> GetById(string id)
     {
       var headline = await _headlines.Find(h => h.Id.Equals(id)).SingleOrDefaultAsync();
       return headline;

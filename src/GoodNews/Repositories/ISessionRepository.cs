@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
-using GoodNews.Models.DBModels.Mongo;
+using GoodNews.Models.DBModels;
 
 namespace GoodNews.Repositories
 {
   public interface ISessionRepository
   {
-    Task<Session> Create(Session session);
-    Task<Session> GetById(string id);
+    Task<ISession> Create(ISession session);
+    Task<ISession> GetById(string id);
   }
 }

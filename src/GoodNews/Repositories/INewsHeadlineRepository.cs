@@ -10,7 +10,7 @@ namespace GoodNews.Repositories
     Task<IList<INewsHeadline>> FetchHeadlinesBySentiment(HeadlineSentiment sentiment, int dateOffset, int limit = 10,
         int offset = 10);
 
-    Task<INewsHeadline> GetHeadline(string headlineId);
+    Task<INewsHeadline> GetById(string headlineId);
 
     Task<int> FetchHeadlinesBySentimentCount(HeadlineSentiment sentiment, int dateOffset);
 

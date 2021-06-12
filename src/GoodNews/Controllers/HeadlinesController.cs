@@ -19,7 +19,9 @@ namespace GoodNews.Controllers
     private readonly INewsHeadlineRepository _headlineRepository;
     private readonly ISessionRepository _sessionRepository;
 
-    public HeadlinesController(INewsHeadlineRepository headlineRepository, ISessionRepository sessionRepository)
+    public HeadlinesController(
+      INewsHeadlineRepository headlineRepository,
+      ISessionRepository sessionRepository)
     {
       _headlineRepository = headlineRepository;
       _sessionRepository = sessionRepository;
@@ -78,7 +80,7 @@ namespace GoodNews.Controllers
     public async Task<ActionResult<HeadlineResponse>> GetHeadline(
       string id, [FromHeader(Name = "annotation-session")] string sessionToken)
     {
-      var headline = await _headlineRepository.GetHeadline(id);
+      var headline = await _headlineRepository.GetById(id);
       if (headline == null) return NotFound();
 
       headline.Annotations = FilterHeadlineAnnotations(headline, sessionToken);
@@ -135,13 +137,13 @@ namespace GoodNews.Controllers
     [ProducesResponseType(204)]
     public async Task<IActionResult> AnnotateHeadline(string headlineId, NewSessionAnnotationRequest annotation)
     {
-      INewsHeadline headline = await _headlineRepository.GetHeadline(headlineId);
+      INewsHeadline headline = await _headlineRepository.GetById(headlineId);
       var session = await _sessionRepository.GetById(annotation.SessionToken);
 
       if (headline == null) return NotFound("Headline not found");
       if (session == null) return NotFound("Session not found");
 
-      var annotations = new List<HeadlineAnnotation>(headline.Annotations);
+      var annotations = headline.Annotations.ToList();
       annotations.Add(new HeadlineAnnotation()
       {
         SessionId = annotation.SessionToken,
@@ -155,10 +157,10 @@ namespace GoodNews.Controllers
       return NoContent();
     }
 
-    private List<HeadlineAnnotation> FilterHeadlineAnnotations(INewsHeadline headline, string session)
+    private List<IHeadlineAnnotation> FilterHeadlineAnnotations(INewsHeadline headline, string session)
     {
       return String.IsNullOrEmpty(session) ?
-        new List<HeadlineAnnotation>() :
+        new List<IHeadlineAnnotation>() :
         headline.Annotations
           .Where(a => a.SessionId.Equals(session))
           .ToList();

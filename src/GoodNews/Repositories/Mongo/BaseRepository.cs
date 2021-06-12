@@ -1,11 +1,12 @@
 using System.Threading.Tasks;
+using GoodNews.Models.DBModels;
 using GoodNews.Models.DBModels.Mongo;
 using GoodNews.Models.Settings;
 using MongoDB.Driver;
 
 namespace GoodNews.Repositories.Mongo
 {
-  public abstract class BaseRepository<T> where T : BaseMongoEntity
+  public abstract class BaseRepository<T> where T : IDatabaseModel
   {
     protected readonly IMongoDatabase _db;
 

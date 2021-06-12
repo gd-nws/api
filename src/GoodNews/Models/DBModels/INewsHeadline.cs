@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using GoodNews.Models.DBModels.Mongo;
 
 namespace GoodNews.Models.DBModels
 {
-  public interface INewsHeadline
+  public interface INewsHeadline : IDatabaseModel
   {
-    string Id { get; set; }
     long LegacyId { get; set; }
     string Headline { get; set; }
     long? PredictedClass { get; set; }
@@ -29,11 +27,9 @@ namespace GoodNews.Models.DBModels
 
     string DisplayImage { get; set; }
 
-    DateTime CreatedAt { get; set; }
+    IHeadlineVotes Votes { get; set; }
 
-    HeadlineVotes Votes { get; set; }
-
-    List<HeadlineAnnotation> Annotations { get; set; }
+    IEnumerable<IHeadlineAnnotation> Annotations { get; set; }
   }
 }
 

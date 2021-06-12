@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.Serializers;
 
 namespace GoodNews.Models.DBModels.Mongo
 {
 
+  [BsonDiscriminator(Required = true)]
+  [BsonKnownTypes(typeof(MongoNewsHeadline))]
   public class MongoNewsHeadline : BaseMongoEntity, INewsHeadline
   {
     public MongoNewsHeadline()
@@ -52,9 +55,11 @@ namespace GoodNews.Models.DBModels.Mongo
     public string DisplayImage { get; set; }
 
     [BsonElement("votes")]
-    public HeadlineVotes Votes { get; set; }
+    [BsonSerializer(typeof(ImpliedImplementationInterfaceSerializer<IHeadlineVotes, HeadlineVotes>))]
+    public IHeadlineVotes Votes { get; set; }
 
     [BsonElement("annotations")]
-    public List<HeadlineAnnotation> Annotations { get; set; }
+    [BsonSerializer(typeof(ImpliedImplementationInterfaceSerializer<IEnumerable<IHeadlineAnnotation>, List<HeadlineAnnotation>>))]
+    public IEnumerable<IHeadlineAnnotation> Annotations { get; set; }
   }
 }

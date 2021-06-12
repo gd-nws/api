@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace GoodNews.Models.DBModels.Mongo
 {
-  public class BaseMongoEntity
+  public class BaseMongoEntity : IDatabaseModel
   {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
