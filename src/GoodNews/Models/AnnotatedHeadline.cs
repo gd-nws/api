@@ -1,3 +1,5 @@
+using GoodNews.Models.DBModels.Postgres;
+
 namespace GoodNews.Models
 {
   public class AnnotatedHeadline : NewsHeadline

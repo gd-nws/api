@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GoodNews.Models;
 using GoodNews.Models.DBModels;
+using Models.DBModels;
 
 namespace GoodNews.Repositories
 {
@@ -18,5 +19,7 @@ namespace GoodNews.Repositories
         int offset = 0);
 
     Task<int> SearchHeadlinesCount(HeadlineSentiment sentiment, string term);
+
+    Task UpdateHeadline(INewsHeadline headline);
   }
 }

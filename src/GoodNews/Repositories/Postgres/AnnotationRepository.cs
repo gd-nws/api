@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GoodNews.Models;
 using GoodNews.Models.DBModels;
+using GoodNews.Models.DBModels.Postgres;
 using Microsoft.EntityFrameworkCore;
 
 namespace GoodNews.Repositories.Postgres
@@ -15,14 +16,15 @@ namespace GoodNews.Repositories.Postgres
 
     public async Task<List<SessionAnnotation>> GetSessionAnnotations(string session)
     {
-      var result = await Db.SessionAnnotations.FromSqlRaw($@"
-                SELECT *
-                FROM good_news.session_annotations sa
-                WHERE sa.session_id = '{session}'
-                ORDER BY sa.created_at DESC
-            ").ToListAsync();
+      // var result = await Db.SessionAnnotations.FromSqlRaw($@"
+      //           SELECT *
+      //           FROM good_news.session_annotations sa
+      //           WHERE sa.session_id = '{session}'
+      //           ORDER BY sa.created_at DESC
+      //       ").ToListAsync();
 
-      return result;
+      // return result;
+      throw new NotImplementedException();
     }
 
     public async Task CreateSessionAnnotation(INewsHeadline headline, Session session, HeadlineSentiment sentiment)

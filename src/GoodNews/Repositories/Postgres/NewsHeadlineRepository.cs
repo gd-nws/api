@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using GoodNews.Models;
 using GoodNews.Models.DBModels;
+using GoodNews.Models.DBModels.Postgres;
 using Microsoft.EntityFrameworkCore;
+using Models.DBModels;
 
 namespace GoodNews.Repositories.Postgres
 {
@@ -185,6 +187,11 @@ namespace GoodNews.Repositories.Postgres
         }).ToArray();
 
       return formatted;
+    }
+
+    public Task UpdateHeadline(INewsHeadline headline)
+    {
+      throw new NotImplementedException();
     }
   }
 }

@@ -65,7 +65,7 @@ namespace GoodNews
       // Repositories
       services.AddSingleton<INewsHeadlineRepository, Repositories.Mongo.NewsHeadlineRepository>();
       // services.AddSingleton<IAnnotationRepository, AnnotationRepository>();
-      // services.AddSingleton<ISessionRepository, SessionRepository>();
+      services.AddSingleton<ISessionRepository, Repositories.Mongo.SessionRepository>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

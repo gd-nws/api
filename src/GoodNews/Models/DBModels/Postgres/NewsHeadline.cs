@@ -1,10 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using GoodNews.Models.DBModels;
 using Models.DBModels.Mongo;
 
-namespace GoodNews.Models
+namespace GoodNews.Models.DBModels.Postgres
 {
   [Table("headlines")]
   public class NewsHeadline : INewsHeadline
@@ -37,6 +37,6 @@ namespace GoodNews.Models
     [Column("created_at")] public DateTime CreatedAt { get; set; }
 
     public HeadlineVotes Votes { get; set; }
-    public HeadlineAnnotation[] Annotations { get; set; }
+    public List<HeadlineAnnotation> Annotations { get; set; }
   }
 }

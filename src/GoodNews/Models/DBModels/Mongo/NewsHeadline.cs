@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using GoodNews.Models.DBModels;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -10,7 +11,7 @@ namespace Models.DBModels.Mongo
   {
     public MongoNewsHeadline()
     {
-      Annotations = new HeadlineAnnotation[] { };
+      Annotations = new List<HeadlineAnnotation>();
     }
 
     // Old numeric Id
@@ -63,6 +64,6 @@ namespace Models.DBModels.Mongo
     public HeadlineVotes Votes { get; set; }
 
     [BsonElement("annotations")]
-    public HeadlineAnnotation[] Annotations { get; set; }
+    public List<HeadlineAnnotation> Annotations { get; set; }
   }
 }

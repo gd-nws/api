@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GoodNews.Models;
@@ -55,7 +56,7 @@ namespace GoodNews.Controllers
 
       foreach (var headline in headlines)
       {
-        headline.Annotations = (HeadlineAnnotation[])FilterHeadlineAnnotations(headline, sessionToken);
+        headline.Annotations = FilterHeadlineAnnotations(headline, sessionToken);
       }
 
       return new HeadlinesResponse
@@ -77,7 +78,7 @@ namespace GoodNews.Controllers
       var headline = await _headlineRepository.GetHeadline(id);
       if (headline == null) return NotFound();
 
-      headline.Annotations = (HeadlineAnnotation[])FilterHeadlineAnnotations(headline, sessionToken);
+      headline.Annotations = FilterHeadlineAnnotations(headline, sessionToken);
 
       return new HeadlineResponse
       {
@@ -111,7 +112,7 @@ namespace GoodNews.Controllers
 
       foreach (var headline in headlines)
       {
-        headline.Annotations = (HeadlineAnnotation[])FilterHeadlineAnnotations(headline, sessionToken);
+        headline.Annotations = FilterHeadlineAnnotations(headline, sessionToken);
       }
 
       return new HeadlinesResponse
@@ -121,13 +122,13 @@ namespace GoodNews.Controllers
       };
     }
 
-    private IHeadlineAnnotation[] FilterHeadlineAnnotations(INewsHeadline headline, string session)
+    private List<HeadlineAnnotation> FilterHeadlineAnnotations(INewsHeadline headline, string session)
     {
       return String.IsNullOrEmpty(session) ?
-        new HeadlineAnnotation[] { } :
+        new List<HeadlineAnnotation>() :
         headline.Annotations
           .Where(a => a.SessionId.Equals(session))
-          .ToArray();
+          .ToList();
     }
   }
 }

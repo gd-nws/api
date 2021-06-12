@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Models.DBModels;
 using Models.DBModels.Mongo;
 
 namespace GoodNews.Models.DBModels
@@ -32,7 +34,7 @@ namespace GoodNews.Models.DBModels
 
     HeadlineVotes Votes { get; set; }
 
-    HeadlineAnnotation[] Annotations { get; set; }
+    List<HeadlineAnnotation> Annotations { get; set; }
   }
 }
 

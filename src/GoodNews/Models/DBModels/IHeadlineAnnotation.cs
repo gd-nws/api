@@ -6,6 +6,6 @@ namespace Models.DBModels
   {
     int Vote { get; set; }
     string SessionId { get; set; }
-    DateTime createdAt { get; set; }
+    DateTime CreatedAt { get; set; }
   }
 }

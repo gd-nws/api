@@ -21,6 +21,7 @@ namespace GoodNews.Repositories.Mongo
 
       _headlines = database.GetCollection<MongoNewsHeadline>(settings.HeadlinesCollectionName);
     }
+
     public async Task<IList<INewsHeadline>> FetchHeadlinesBySentiment(HeadlineSentiment sentiment, int dateOffset, int limit = 10, int offset = 0)
     {
       var isPositive = sentiment == HeadlineSentiment.POSITIVE;
@@ -94,6 +95,17 @@ namespace GoodNews.Repositories.Mongo
         ).CountDocumentsAsync();
 
       return (int)count;
+    }
+
+    /// <summary>
+    /// Update a headline.
+    /// Replaces the current headline with the one passed in.
+    /// </summary>
+    /// <param name="headline"></param>
+    /// <returns></returns>
+    public async Task UpdateHeadline(INewsHeadline headline)
+    {
+      await _headlines.ReplaceOneAsync(h => h.Id == headline.Id, (MongoNewsHeadline)headline);
     }
   }
 }

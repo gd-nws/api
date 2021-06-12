@@ -12,6 +12,6 @@ namespace Models.DBModels.Mongo
     public string SessionId { get; set; }
 
     [BsonElement("createdAt")]
-    public DateTime createdAt { get; set; }
+    public DateTime CreatedAt { get; set; }
   }
 }
