@@ -5,6 +5,8 @@ namespace GoodNews.Models.DBModels
 {
   public interface INewsHeadline : IDatabaseModel
   {
+    new string Id { get; set; }
+    new DateTime CreatedAt { get; set; }
     long LegacyId { get; set; }
     string Headline { get; set; }
     long? PredictedClass { get; set; }

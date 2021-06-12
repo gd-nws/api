@@ -6,9 +6,6 @@ using MongoDB.Bson.Serialization.Serializers;
 
 namespace GoodNews.Models.DBModels.Mongo
 {
-
-  [BsonDiscriminator(Required = true)]
-  [BsonKnownTypes(typeof(MongoNewsHeadline))]
   public class MongoNewsHeadline : BaseMongoEntity, INewsHeadline
   {
     public MongoNewsHeadline()

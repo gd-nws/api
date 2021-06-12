@@ -19,7 +19,7 @@ namespace GoodNews.Controllers
     }
 
     /// <summary>
-    /// Create an annotation session.
+    /// Get an annotation session.
     /// </summary>
     /// <returns></returns>
     [HttpGet]

@@ -34,6 +34,7 @@ namespace GoodNews.Controllers
     /// <param name="limit"></param>
     /// <param name="page"></param>
     /// <param name="dateTime"></param>
+    /// <param name="sessionToken"></param>
     /// <returns></returns>
     [HttpGet]
     [Produces("application/json")]
@@ -74,9 +75,11 @@ namespace GoodNews.Controllers
     ///     Get a news headline
     /// </summary>
     /// <param name="id"></param>
+    /// <param name="sessionToken"></param>
     /// <returns></returns>
     [HttpGet("{id}", Name = "GetHeadline")]
     [Produces("application/json")]
+    [ProducesResponseType(200)]
     public async Task<ActionResult<HeadlineResponse>> GetHeadline(
       string id, [FromHeader(Name = "annotation-session")] string sessionToken)
     {
@@ -98,9 +101,11 @@ namespace GoodNews.Controllers
     /// <param name="limit"></param>
     /// <param name="page"></param>
     /// <param name="term"></param>
+    /// <param name="sessionToken"></param>
     /// <returns></returns>
     [HttpGet("search", Name = "SearchHeadlines")]
     [Produces("application/json")]
+    [ProducesResponseType(200)]
     public async Task<ActionResult<HeadlinesResponse>> SearchHeadlines(
         [FromQuery(Name = "term")] string term,
         [FromHeader(Name = "annotation-session")] string sessionToken,

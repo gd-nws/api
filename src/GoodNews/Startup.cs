@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using System.Reflection;
 using System.Text.Json.Serialization;
 using GoodNews.Models.Settings;
 using GoodNews.Repositories;
@@ -30,7 +33,25 @@ namespace GoodNews
       });
 
       services.AddSwaggerGen(c =>
-          c.SwaggerDoc("v1", new OpenApiInfo { Title = "Good News!", Version = "v1" }));
+      {
+        c.SwaggerDoc("v1", new OpenApiInfo
+        {
+          Title = "Good News!",
+          Version = "v1",
+          Description = "Fetch headlines from the Good News service",
+          Contact = new OpenApiContact
+          {
+            Name = "Daniel Welsh",
+            Email = string.Empty,
+            Url = new Uri("https://wel-shy.com"),
+          }
+        });
+
+        // Set the comments path for the Swagger JSON and UI.
+        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+        c.IncludeXmlComments(xmlPath);
+      });
 
       services.AddCors(options =>
       {
