@@ -18,14 +18,15 @@ namespace GoodNews.Controllers
       _sessionRepository = sessionRepository;
     }
 
-    /**
-     * Get a new session.
-     */
+    /// <summary>
+    /// Create an annotation session.
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<ActionResult<NewSessionResponse>> CreateSession()
     {
       var session = new Session() { CreatedAt = DateTime.Now };
-      var uuid = await _sessionRepository.Create(session);
+      await _sessionRepository.Create(session);
       return new NewSessionResponse
       {
         SessionToken = session.Id

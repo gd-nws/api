@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Models.DBModels;
 using Models.DBModels.Mongo;
 
 namespace GoodNews.Models.DBModels

@@ -1,10 +1,8 @@
 using System.Text.Json.Serialization;
 using GoodNews.Models.Settings;
 using GoodNews.Repositories;
-using GoodNews.Repositories.Postgres;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -43,18 +41,6 @@ namespace GoodNews
                       .AllowAnyHeader());
       });
 
-      // services.Configure<PostgresSettings>(
-      //     Configuration.GetSection("Database").GetSection(nameof(PostgresSettings)));
-      // services.AddSingleton<IPostgresSettings>(sp =>
-      //     sp.GetRequiredService<IOptions<PostgresSettings>>().Value);
-
-      // var conString = Configuration
-      //     .GetSection("Database")
-      //     .GetSection(nameof(PostgresSettings))
-      //     .Get<PostgresSettings>().ConnectionString;
-      // services.AddDbContext<GoodNewsDBContext>(options =>
-      //     options.UseNpgsql(conString));
-
       // requires using Microsoft.Extensions.Options
       services.Configure<MongoSettings>(
           Configuration.GetSection("Database").GetSection(nameof(MongoSettings)));
@@ -64,7 +50,6 @@ namespace GoodNews
 
       // Repositories
       services.AddSingleton<INewsHeadlineRepository, Repositories.Mongo.NewsHeadlineRepository>();
-      // services.AddSingleton<IAnnotationRepository, AnnotationRepository>();
       services.AddSingleton<ISessionRepository, Repositories.Mongo.SessionRepository>();
     }
 
@@ -74,9 +59,6 @@ namespace GoodNews
       if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
       app.UseSerilogRequestLogging();
-
-      // var db = app.ApplicationServices.GetRequiredService<GoodNewsDBContext>();
-      // db.Database.EnsureCreated();
 
       app.UseSwagger();
       app.UseSwaggerUI(c =>

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using GoodNews.Models;
 using GoodNews.Models.DBModels;
+using GoodNews.Models.Requests;
 using GoodNews.Models.Responses;
 using GoodNews.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Models.DBModels;
 using Models.DBModels.Mongo;
 
 namespace GoodNews.Controllers
@@ -17,10 +17,12 @@ namespace GoodNews.Controllers
   public class HeadlinesController : ControllerBase
   {
     private readonly INewsHeadlineRepository _headlineRepository;
+    private readonly ISessionRepository _sessionRepository;
 
-    public HeadlinesController(INewsHeadlineRepository headlineRepository)
+    public HeadlinesController(INewsHeadlineRepository headlineRepository, ISessionRepository sessionRepository)
     {
       _headlineRepository = headlineRepository;
+      _sessionRepository = sessionRepository;
     }
 
     /// <summary>
@@ -120,6 +122,36 @@ namespace GoodNews.Controllers
         Headlines = (System.Collections.Generic.IList<Models.DBModels.INewsHeadline>)headlines,
         Count = count
       };
+    }
+
+    /// <summary>
+    ///   Annotate a headline
+    /// </summary>
+    /// <param name="headlineId"></param>
+    /// <param name="annotation"></param>
+    /// <returns></returns>
+    [HttpPost("{headlineId}/annotations")]
+    [ProducesResponseType(204)]
+    public async Task<IActionResult> AnnotateHeadline(int headlineId, NewSessionAnnotationRequest annotation)
+    {
+      INewsHeadline headline = await _headlineRepository.GetHeadline(headlineId);
+      var session = await _sessionRepository.GetById(annotation.SessionToken);
+
+      if (headline == null) return NotFound("Headline not found");
+      if (session == null) return NotFound("Session not found");
+
+      var annotations = new List<HeadlineAnnotation>(headline.Annotations);
+      annotations.Add(new HeadlineAnnotation()
+      {
+        SessionId = annotation.SessionToken,
+        Vote = annotation.Annotation == Models.HeadlineSentiment.POSITIVE ? 1 : -1,
+        CreatedAt = DateTime.Now
+      });
+      headline.Annotations = annotations;
+
+      await _headlineRepository.UpdateHeadline(headline);
+
+      return NoContent();
     }
 
     private List<HeadlineAnnotation> FilterHeadlineAnnotations(INewsHeadline headline, string session)
