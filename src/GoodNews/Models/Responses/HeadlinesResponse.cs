@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using GoodNews.Models.DBModels;
 
 namespace GoodNews.Models.Responses
 {
-    public class HeadlinesResponse
-    {
-        public IList<NewsHeadline> Headlines { get; set; }
-        public int Count { get; set; }
-    }
+  public class HeadlinesResponse
+  {
+    public IList<INewsHeadline> Headlines { get; set; }
+    public int Count { get; set; }
+  }
 }

@@ -1,9 +1,13 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using GoodNews.Models;
+using GoodNews.Models.DBModels;
 using GoodNews.Models.Responses;
 using GoodNews.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Models.DBModels;
+using Models.DBModels.Mongo;
 
 namespace GoodNews.Controllers
 {
@@ -29,10 +33,11 @@ namespace GoodNews.Controllers
     [HttpGet]
     [Produces("application/json")]
     [ProducesResponseType(200)]
-    public async Task<ActionResult<AnnotatedHeadlinesResponse>> GetHeadlinesByDay(
+    public async Task<ActionResult<HeadlinesResponse>> GetHeadlinesByDay(
         [FromQuery(Name = "sentiment")] HeadlineSentiment sentiment,
         [FromQuery(Name = "limit")] int limit, [FromQuery(Name = "page")] int page,
-        [FromQuery(Name = "date")] DateTime dateTime)
+        [FromQuery(Name = "date")] DateTime dateTime,
+        [FromHeader(Name = "annotation-session")] string sessionToken)
     {
       if (page <= 0) return BadRequest("Page must be greater than 0");
 
@@ -48,7 +53,12 @@ namespace GoodNews.Controllers
           await _headlineRepository.FetchHeadlinesBySentiment(sentiment, (int)dateOffset, limit, offset);
       var count = await _headlineRepository.FetchHeadlinesBySentimentCount(sentiment, (int)dateOffset);
 
-      return new AnnotatedHeadlinesResponse
+      foreach (var headline in headlines)
+      {
+        headline.Annotations = (HeadlineAnnotation[])FilterHeadlineAnnotations(headline, sessionToken);
+      }
+
+      return new HeadlinesResponse
       {
         Headlines = headlines,
         Count = count
@@ -62,10 +72,12 @@ namespace GoodNews.Controllers
     /// <returns></returns>
     [HttpGet("{id}", Name = "GetHeadline")]
     [Produces("application/json")]
-    public async Task<ActionResult<HeadlineResponse>> GetHeadline(int id)
+    public async Task<ActionResult<HeadlineResponse>> GetHeadline(int id, [FromHeader(Name = "annotation-session")] string sessionToken)
     {
       var headline = await _headlineRepository.GetHeadline(id);
       if (headline == null) return NotFound();
+
+      headline.Annotations = (HeadlineAnnotation[])FilterHeadlineAnnotations(headline, sessionToken);
 
       return new HeadlineResponse
       {
@@ -83,9 +95,12 @@ namespace GoodNews.Controllers
     /// <returns></returns>
     [HttpGet("search", Name = "SearchHeadlines")]
     [Produces("application/json")]
-    public async Task<ActionResult<HeadlinesResponse>> SearchHeadlines([FromQuery(Name = "term")] string term,
+    public async Task<ActionResult<HeadlinesResponse>> SearchHeadlines(
+        [FromQuery(Name = "term")] string term,
+        [FromHeader(Name = "annotation-session")] string sessionToken,
         [FromQuery(Name = "sentiment")] HeadlineSentiment sentiment = HeadlineSentiment.POSITIVE,
-        [FromQuery(Name = "page")] int page = 1, [FromQuery(Name = "limit")] int limit = 10)
+        [FromQuery(Name = "page")] int page = 1,
+        [FromQuery(Name = "limit")] int limit = 10)
     {
       if (page <= 0) return BadRequest("Page must be greater than 0");
       var offset = (page - 1) * limit;
@@ -94,11 +109,25 @@ namespace GoodNews.Controllers
           await _headlineRepository.SearchHeadlines(sentiment, term, limit, offset);
       var count = await _headlineRepository.SearchHeadlinesCount(sentiment, term);
 
+      foreach (var headline in headlines)
+      {
+        headline.Annotations = (HeadlineAnnotation[])FilterHeadlineAnnotations(headline, sessionToken);
+      }
+
       return new HeadlinesResponse
       {
-        Headlines = headlines,
+        Headlines = (System.Collections.Generic.IList<Models.DBModels.INewsHeadline>)headlines,
         Count = count
       };
+    }
+
+    private IHeadlineAnnotation[] FilterHeadlineAnnotations(INewsHeadline headline, string session)
+    {
+      return String.IsNullOrEmpty(session) ?
+        new HeadlineAnnotation[] { } :
+        headline.Annotations
+          .Where(a => a.SessionId.Equals(session))
+          .ToArray();
     }
   }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GoodNews.Models;
+using GoodNews.Models.DBModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace GoodNews.Repositories.Postgres
@@ -24,7 +25,7 @@ namespace GoodNews.Repositories.Postgres
       public long HeadlineId { get; set; }
     }
 
-    public async Task<IList<AnnotatedHeadline>> FetchHeadlinesBySentiment(HeadlineSentiment sentiment, int dateOffset,
+    public async Task<IList<INewsHeadline>> FetchHeadlinesBySentiment(HeadlineSentiment sentiment, int dateOffset,
         int limit = 10, int offset = 10)
     {
       var isPositive = sentiment == HeadlineSentiment.POSITIVE;
@@ -84,7 +85,7 @@ namespace GoodNews.Repositories.Postgres
       return result;
     }
 
-    public async Task<NewsHeadline> GetHeadline(int headlineId)
+    public async Task<INewsHeadline> GetHeadline(int headlineId)
     {
       var query = (
           from h in Db.NewsHeadlines
@@ -124,7 +125,7 @@ namespace GoodNews.Repositories.Postgres
       return count;
     }
 
-    public async Task<IList<NewsHeadline>> SearchHeadlines(HeadlineSentiment sentiment, string term, int limit = 10,
+    public async Task<IList<INewsHeadline>> SearchHeadlines(HeadlineSentiment sentiment, string term, int limit = 10,
         int offset = 0)
     {
       var isPositive = sentiment == HeadlineSentiment.POSITIVE;
@@ -166,21 +167,21 @@ namespace GoodNews.Repositories.Postgres
         from r in results
         select new AnnotatedHeadline()
         {
-            Id = r.Headline.Id,
-            Headline = r.Headline.Headline,
-            Hashcode = r.Headline.Hashcode,
-            PublishedAt = r.Headline.PublishedAt,
-            PredictedClass = r.Headline.PredictedClass,
-            Origin = r.Headline.Origin,
-            Link = r.Headline.Link,
-            SemanticValue = r.Headline.SemanticValue,
-            DisplayImage = r.Headline.DisplayImage,
-            CreatedAt = r.Headline.CreatedAt,
-            Pos = r.Headline.Pos,
-            Neg = r.Headline.Neg,
-            Nue = r.Headline.Nue,
-            PositiveVotes = r.Annotation.PositiveVotes,
-            NegativeVotes = r.Annotation.NegativeVotes
+          Id = r.Headline.Id,
+          Headline = r.Headline.Headline,
+          Hashcode = r.Headline.Hashcode,
+          PublishedAt = r.Headline.PublishedAt,
+          PredictedClass = r.Headline.PredictedClass,
+          Origin = r.Headline.Origin,
+          Link = r.Headline.Link,
+          SemanticValue = r.Headline.SemanticValue,
+          DisplayImage = r.Headline.DisplayImage,
+          CreatedAt = r.Headline.CreatedAt,
+          Pos = r.Headline.Pos,
+          Neg = r.Headline.Neg,
+          Nue = r.Headline.Nue,
+          PositiveVotes = r.Annotation.PositiveVotes,
+          NegativeVotes = r.Annotation.NegativeVotes
         }).ToArray();
 
       return formatted;

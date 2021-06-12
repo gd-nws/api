@@ -1,12 +1,15 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using GoodNews.Models.DBModels;
+using Models.DBModels.Mongo;
 
 namespace GoodNews.Models
 {
   [Table("headlines")]
-  public class NewsHeadline
+  public class NewsHeadline : INewsHeadline
   {
+    public string HeadlineId { get { return this.Id.ToString(); } set { this.Headline = value; } }
     [Key] [Column("id")] public long Id { get; set; }
 
     [Column("predicted_class")] public long? PredictedClass { get; set; }
@@ -32,5 +35,8 @@ namespace GoodNews.Models
     [Column("display_image")] public string DisplayImage { get; set; }
 
     [Column("created_at")] public DateTime CreatedAt { get; set; }
+
+    public HeadlineVotes Votes { get; set; }
+    public HeadlineAnnotation[] Annotations { get; set; }
   }
 }

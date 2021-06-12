@@ -1,0 +1,14 @@
+using GoodNews.Models.DBModels;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace Models.DBModels.Mongo
+{
+  public class HeadlineVotes : IHeadlineVotes
+  {
+    [BsonElement("positive")]
+    public int Positive { get; set; }
+
+    [BsonElement("negative")]
+    public int Negative { get; set; }
+  }
+}
