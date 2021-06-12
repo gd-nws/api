@@ -15,88 +15,88 @@ using Serilog;
 
 namespace GoodNews
 {
-  public class Startup
-  {
-    public Startup(IConfiguration configuration)
+    public class Startup
     {
-      Configuration = configuration;
-    }
-
-    public IConfiguration Configuration { get; }
-
-    // This method gets called by the runtime. Use this method to add services to the container.
-    public void ConfigureServices(IServiceCollection services)
-    {
-      services.AddControllers().AddJsonOptions(opt =>
-      {
-        opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-      });
-
-      services.AddSwaggerGen(c =>
-      {
-        c.SwaggerDoc("v1", new OpenApiInfo
+        public Startup(IConfiguration configuration)
         {
-          Title = "Good News!",
-          Version = "v1",
-          Description = "Fetch headlines from the Good News service",
-          Contact = new OpenApiContact
-          {
-            Name = "Daniel Welsh",
-            Email = string.Empty,
-            Url = new Uri("https://wel-shy.com"),
-          }
-        });
+            Configuration = configuration;
+        }
 
-        // Set the comments path for the Swagger JSON and UI.
-        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-        c.IncludeXmlComments(xmlPath);
-      });
+        public IConfiguration Configuration { get; }
 
-      services.AddCors(options =>
-      {
-        options.AddPolicy("CorsPolicy",
-                  builder => builder
-                      .AllowAnyOrigin()
-                      .AllowAnyMethod()
-                      .AllowAnyHeader());
-      });
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddControllers().AddJsonOptions(opt =>
+            {
+                opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
 
-      // requires using Microsoft.Extensions.Options
-      services.Configure<MongoSettings>(
-          Configuration.GetSection("Database").GetSection(nameof(MongoSettings)));
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Good News!",
+                    Version = "v1",
+                    Description = "Fetch headlines from the Good News service",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Daniel Welsh",
+                        Email = string.Empty,
+                        Url = new Uri("https://wel-shy.com"),
+                    }
+                });
 
-      services.AddSingleton<IMongoSettings>(sp =>
-          sp.GetRequiredService<IOptions<MongoSettings>>().Value);
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
 
-      // Repositories
-      services.AddSingleton<INewsHeadlineRepository, Repositories.Mongo.NewsHeadlineRepository>();
-      services.AddSingleton<ISessionRepository, Repositories.Mongo.SessionRepository>();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
+
+            // requires using Microsoft.Extensions.Options
+            services.Configure<MongoSettings>(
+                Configuration.GetSection("Database").GetSection(nameof(MongoSettings)));
+
+            services.AddSingleton<IMongoSettings>(sp =>
+                sp.GetRequiredService<IOptions<MongoSettings>>().Value);
+
+            // Repositories
+            services.AddSingleton<INewsHeadlineRepository, Repositories.Mongo.NewsHeadlineRepository>();
+            services.AddSingleton<ISessionRepository, Repositories.Mongo.SessionRepository>();
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+
+            app.UseSerilogRequestLogging();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Good News! V1");
+                c.RoutePrefix = string.Empty;
+            });
+
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
+
+            app.UseCors("CorsPolicy");
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        }
     }
-
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-      if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
-
-      app.UseSerilogRequestLogging();
-
-      app.UseSwagger();
-      app.UseSwaggerUI(c =>
-      {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Good News! V1");
-        c.RoutePrefix = string.Empty;
-      });
-
-      app.UseHttpsRedirection();
-
-      app.UseRouting();
-
-      app.UseCors("CorsPolicy");
-
-      app.UseAuthorization();
-
-      app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-    }
-  }
 }

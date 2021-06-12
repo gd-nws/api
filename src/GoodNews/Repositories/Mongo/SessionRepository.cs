@@ -7,26 +7,26 @@ using MongoDB.Driver;
 
 namespace GoodNews.Repositories.Mongo
 {
-  public class SessionRepository : BaseRepository<ISession>, ISessionRepository
-  {
-    private readonly IMongoCollection<Session> _sessions;
-    public SessionRepository(IMongoSettings settings) : base(settings)
+    public class SessionRepository : BaseRepository<ISession>, ISessionRepository
     {
-      var db = base._db;
-      Console.WriteLine(db);
-      _sessions = db.GetCollection<Session>("Sessions");
-    }
+        private readonly IMongoCollection<Session> _sessions;
+        public SessionRepository(IMongoSettings settings) : base(settings)
+        {
+            var db = base._db;
+            Console.WriteLine(db);
+            _sessions = db.GetCollection<Session>("Sessions");
+        }
 
-    public async override Task<ISession> Create(ISession session)
-    {
-      await _sessions.InsertOneAsync((Session)session);
-      return session;
-    }
+        public async override Task<ISession> Create(ISession session)
+        {
+            await _sessions.InsertOneAsync((Session)session);
+            return session;
+        }
 
-    public async override Task<ISession> GetById(string id)
-    {
-      var session = await _sessions.Find(s => s.Id.Equals(id)).SingleOrDefaultAsync();
-      return session;
+        public async override Task<ISession> GetById(string id)
+        {
+            var session = await _sessions.Find(s => s.Id.Equals(id)).SingleOrDefaultAsync();
+            return session;
+        }
     }
-  }
 }

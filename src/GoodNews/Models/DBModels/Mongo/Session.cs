@@ -1,6 +1,6 @@
 namespace GoodNews.Models.DBModels.Mongo
 {
-  public class Session : BaseMongoEntity, ISession
-  {
-  }
+    public class Session : BaseMongoEntity, ISession
+    {
+    }
 }
