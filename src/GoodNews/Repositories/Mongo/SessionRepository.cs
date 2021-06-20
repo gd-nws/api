@@ -13,7 +13,6 @@ namespace GoodNews.Repositories.Mongo
         public SessionRepository(IMongoSettings settings) : base(settings)
         {
             var db = base._db;
-            Console.WriteLine(db);
             _sessions = db.GetCollection<Session>("Sessions");
         }
 
